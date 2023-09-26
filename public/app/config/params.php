@@ -9,6 +9,7 @@ $content = '';
 define('PUBLIC_FOLDER', 'public');
 define('ADMIN_FOLDER', 'admin');
 define('DISPATCHER_NAME', 'index.php');
+define('IMG_FOLDER', 'http://localhost/scripts_serveurs/Recipe_master/public/www/img/');
 
 // Paramètres de connexion à la DB
 define('DB_HOST', '127.0.0.1:3306');

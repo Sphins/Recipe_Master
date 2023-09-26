@@ -30,3 +30,13 @@ function slugify($str, $delimiter = '-')
 
     return $str;
 }
+
+function limit_words($string, $word_limit)
+{
+    $words = explode(" ", $string);
+    $result = implode(" ", array_splice($words, 0, $word_limit));
+    if (count($words) > $word_limit) {
+        $result .= '...';
+    }
+    return $result;
+}
