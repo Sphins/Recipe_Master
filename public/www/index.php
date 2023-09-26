@@ -4,7 +4,7 @@
 require_once '../core/init.php';
 
 // 2. Chargement du router
-require_once '../app/routers/index.php';
+require_once '../app/routers/indexRouters.php';
 
 // 3. Chargement du template
 
