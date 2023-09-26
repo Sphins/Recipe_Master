@@ -6,7 +6,11 @@ RewriteEngine on
 
 RewriteRule ^index/recettes$ index.php/?dishes=index[L]
 
+#Route liste des users
+#pattern : index/chefs
+#Target: /?users=index
 
+RewriteRule ^index/chefs$ index.php/?users=index[L]
 
 #route defaut
 #Pattern: /

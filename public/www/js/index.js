@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
           listDishes.innerHTML += code;
     
           var dishPreviews = listDishes.querySelectorAll('.post-preview:nth-last-child(-n+6)');
-          console.log(dishPreviews.length)
           dishPreviews.forEach(function(dishPreview) {
             dishPreview.style.display = 'none';
             setTimeout(function() {
