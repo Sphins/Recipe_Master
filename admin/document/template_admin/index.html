@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BACKOFFICE - WED PROJECT</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="theme.css" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-900 text-white">
+
+    <!-- Fixed navbar -->
+    <nav class="bg-gray-700 fixed top-0 w-full z-50 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Navbar Header -->
+                <div class="flex items-center">
+                    <a href="" class="text-white font-bold text-xl hover:text-gray-300">BACKOFFICE BOOK HUNTER</a>
+                </div>
+
+                <!-- Navbar Links -->
+                <div class="flex">
+                    <a href="#" class="text-gray-300 hover:text-white px-3 py-2">DASHBOARD</a>
+                    <!-- Dropdown Menu -->
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="text-gray-300 hover:text-white px-3 py-2">
+                            GESTION <span x-show="!open" class="text-white">&#9662;</span><span x-show="open" class="text-white">&#9652;</span>
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute left-0 mt-2 w-64 bg-gray-700 rounded-lg shadow-lg py-2 z-10">
+                            <p class="px-4 py-2 text-gray-400">GESTION DES LIVRES</p>
+                            <a href="books" class="block px-4 py-2 text-gray-300 hover:text-white">Liste des livres</a>
+                            <a href="books/add" class="block px-4 py-2 text-gray-300 hover:text-white">Ajouter un livre</a>
+                            <hr class="border-t border-gray-600 my-2">
+                            <p class="px-4 py-2 text-gray-400">GESTION DES AUTEURS</p>
+                            <a href="authors" class="block px-4 py-2 text-gray-300 hover:text-white">Liste des auteurs</a>
+                            <a href="authors/add" class="block px-4 py-2 text-gray-300 hover:text-white">Ajouter un auteur</a>
+                            <hr class="border-t border-gray-600 my-2">
+                            <p class="px-4 py-2 text-gray-400">GESTION DES CATÉGORIES</p>
+                            <a href="categories" class="block px-4 py-2 text-gray-300 hover:text-white">Liste des catégories</a>
+                            <a href="categories/add" class="block px-4 py-2 text-gray-300 hover:text-white">Ajouter une catégorie</a>
+                            <hr class="border-t border-gray-600 my-2">
+                            <p class="px-4 py-2 text-gray-400">GESTION DES TAGS</p>
+                            <a href="tags" class="block px-4 py-2 text-gray-300 hover:text-white">Liste des tags</a>
+                            <a href="tags/add" class="block px-4 py-2 text-gray-300 hover:text-white">Ajouter un tag</a>
+                            <hr class="border-t border-gray-600 my-2">
+                            <p class="px-4 py-2 text-gray-400">GESTION DES UTILISATEURS</p>
+                            <a href="users" class="block px-4 py-2 text-gray-300 hover:text-white">Liste des utilisateurs</a>
+                            <a href="users/add" class="block px-4 py-2 text-gray-300 hover:text-white">Ajouter un utilisateur</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-12 p-6">
+        <!-- Main content -->
+        <!-- ... (your content) ... -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>

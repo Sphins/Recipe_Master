@@ -1,0 +1,44 @@
+RewriteEngine on
+
+#Route des Tables =============================================
+
+#SHOW TABLE
+#Pattern: table/show/{namOfTable}
+#Target : index.php/?table=x
+
+RewriteRule ^table/show/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])$ index.php/?table=show&name=$1 [L]
+
+#create form from table
+#Pattern: table/form/{namOfTable}
+#Target : index.php/?table=form&name={namOfTable}
+
+RewriteRule ^table/form/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])$ index.php/?table=form&name=$1 [L]
+
+#add from form to table
+#Pattern: table/add/{namOfTable}
+#Target : index.php/?table=add&name={namOfTable}
+
+RewriteRule ^table/add/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])$ index.php/?table=add&name=$1 [L]
+
+#delete from table
+#Pattern: table/delete/{namOfTable}/{id}
+#Target : index.php/?table=delete&name={namOfTable}$id={id}
+
+RewriteRule ^table/delete/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])/([1-9][0-9]*)$ index.php/?table=delete&name=$1&id=$3 [L]
+
+#Route de users =============================================
+
+#LOGOUT
+#Pattern: users/logout
+#Target : index.php/?users=logout
+
+rewriteRule ^users/logout$ index.php/?users=logout [L]
+
+#Route par defaut =============================================
+
+
+#route defaut
+#Pattern: /
+#Target : /
+
+RewriteCond %{REQUEST_URI} !\.(js|css|jpg|gif|zip|png|pdf)$ [NC]
