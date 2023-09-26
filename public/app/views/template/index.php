@@ -13,6 +13,9 @@
 
     <!-- Footer -->
     <?php include_once '../app/views/template/partials/_footer.php'; ?>
+    <!--Scripts -->
+
+    <?php include_once '../app/views/template/partials/_scripts.php'; ?>
 </body>
 
 </html>

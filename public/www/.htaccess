@@ -1,0 +1,15 @@
+RewriteEngine on
+
+#Route liste des dishes
+#pattern : index/recettes
+#Target: /?dishes=index
+
+RewriteRule ^index/recettes$ index.php/?dishes=index[L]
+
+
+
+#route defaut
+#Pattern: /
+#Target : /
+
+RewriteCond %{REQUEST_URI} !\.(js|css|jpg|gif|zip|png|pdf)$ [NC]

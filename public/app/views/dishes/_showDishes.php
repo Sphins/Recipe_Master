@@ -1,33 +1,5 @@
-<?php
+<div id="dishesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-include_once '../core/tools.php';
-
-use Core\Tools;
-?>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-
-    <?php foreach ($dishes as $dish) : ?>
-        <article class="bg-white rounded-lg overflow-hidden shadow-lg relative">
-            <img class="w-full h-48 object-cover" src="https://source.unsplash.com/480x360/?recipe" alt="Recipe Image" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold mb-2"><?php echo $dish['dish_name']; ?></h3>
-                <div class="flex items-center mb-2">
-                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                    <span><?php echo number_format($dish['average_rating'], 1); ?></span>
-                </div>
-                <p class="text-gray-600"><?php echo Tools\limit_words($dish['description'], 10); ?></p>
-                <div class="flex items-center mt-4">
-                    <span class="text-gray-700 mr-2">Par <?php echo $dish['user_name']; ?></span>
-                    <span class="text-gray-500"><i class="fas fa-comment"></i> <?php echo $dish['number_of_comments']; ?> commentaires</span>
-                </div>
-                <a href="recipe.html" class="inline-block mt-4 bg-red-500 hover:bg-red-800 rounded-full px-4 py-2 text-white">
-                    Voir la recette
-                </a>
-            </div>
-        </article>
-    <?php endforeach; ?>
-
+    <?php include_once '../app/views/dishes/_dishesCard.php'; ?>
 
 </div>

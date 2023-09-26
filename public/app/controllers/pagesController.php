@@ -24,7 +24,7 @@ function homeAction(\PDO $connexion)
     $topUser = UsersModel\getTopUser($connexion);
 
     // Récupération des 3 meilleures recettes de cet utilisateur pour les afficher sur la page d'accueil
-    $topUserDishes = DishesModel\getTopDishesByUserId($connexion, $topUser['user_id']);
+    $topUserDishes = DishesModel\getLastDishesByUserId($connexion, $topUser['user_id']);
 
     // Configuration du titre et du contenu pour la vue
     // Le titre de la page est défini et le contenu est généré en incluant la vue correspondante

@@ -71,15 +71,16 @@ function findPopularDishes(\PDO $connexion, $limitation)
 }
 
 /**
- * Récupère les meilleures recettes d'un utilisateur spécifié par son ID.
+ * Récupère les dernières recettes publiées par un utilisateur spécifié.
+ *
  *
  * @param \PDO $connexion La connexion à la base de données.
  * @param int $userId L'ID de l'utilisateur.
- * @return array Les meilleures recettes de l'utilisateur.
+ * @return array Les trois dernières recettes publiées par l'utilisateur.
  */
-function getTopDishesByUserId(\PDO $connexion, $userId)
+function getLastDishesByUserId(\PDO $connexion, $userId)
 {
-    // Requête SQL pour récupérer les meilleures recettes d'un utilisateur spécifié
+    // Requête SQL pour récupérer les trois dernières recettes publiées par un utilisateur spécifié
     $sql = "
         SELECT 
             dishes.name AS dish_name,
@@ -89,7 +90,7 @@ function getTopDishesByUserId(\PDO $connexion, $userId)
         LEFT JOIN ratings ON dishes.id = ratings.dish_id
         WHERE dishes.user_id = :userId
         GROUP BY dishes.id
-        ORDER BY average_rating DESC
+        ORDER BY dishes.created_at DESC
         LIMIT 3
     ";
 
@@ -99,5 +100,32 @@ function getTopDishesByUserId(\PDO $connexion, $userId)
     $rs->execute();
 
     // Retourne les résultats sous forme de tableau associatif
+    return $rs->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+function findAll(\PDO $connexion, int $limit = 6, int $offset = 0)
+{
+    $sql = "
+        SELECT 
+            dishes.name AS dish_name,
+            COALESCE(AVG(ratings.value), 0) AS average_rating,
+            dishes.description,
+            users.name AS user_name,
+            COUNT(comments.id) AS number_of_comments
+        FROM dishes
+        LEFT JOIN ratings ON dishes.id = ratings.dish_id
+        LEFT JOIN users ON dishes.user_id = users.id
+        LEFT JOIN comments ON dishes.id = comments.dish_id
+        GROUP BY dishes.id
+        ORDER BY dishes.name ASC
+        LIMIT :limit
+        OFFSET :offset
+    ";
+
+    $rs = $connexion->prepare($sql);
+    $rs->bindValue(':limit', $limit, \PDO::PARAM_INT);
+    $rs->bindValue(':offset', $offset, \PDO::PARAM_INT);
+    $rs->execute();
+
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
 }
