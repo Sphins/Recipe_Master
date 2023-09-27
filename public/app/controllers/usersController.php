@@ -3,6 +3,7 @@
 namespace App\Controllers\UsersController;
 
 use App\Models\UsersModel;
+use App\Models\DishesModel;
 
 function indexAction(\PDO $connexion)
 {
@@ -30,10 +31,15 @@ function loadMoreAction(\PDO $connexion, int $offset)
 function showAction(\PDO $connexion, int $id)
 {
     include_once '../app/models/usersModel.php';
+    include_once '../app/models/dishesModel.php';
+
     $user = UsersModel\findOneByUserId($connexion, $id);
+    $dishes = DishesModel\findAllByUserId($connexion, $id);
+
+
 
     global $content, $title;
-    $title = "Users-" . $user['name']; // Assurez-vous que 'name' est le champ correct dans votre base de données
+    $title = "Users-" . $user['user_name'];
     ob_start();
     include '../app/views/users/show.php';
     $content = ob_get_clean();

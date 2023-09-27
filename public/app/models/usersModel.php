@@ -67,3 +67,21 @@ function findAll(\PDO $connexion, int $limit = 9, int $offset = 0)
 
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
 }
+
+function findOneByUserId(\PDO $connexion, int $id)
+{
+    $sql = "
+        SELECT 
+            users.picture AS user_picture,
+            users.name AS user_name,
+            users.biography AS user_biography
+        FROM users
+        WHERE users.id = :id
+    ";
+
+    $rs = $connexion->prepare($sql);
+    $rs->bindValue(':id', $id, \PDO::PARAM_INT);
+    $rs->execute();
+
+    return $rs->fetch(\PDO::FETCH_ASSOC);
+}
