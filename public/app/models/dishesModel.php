@@ -182,3 +182,29 @@ function findAllByUserId(\PDO $connexion, int $userId)
 
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
 }
+
+function findAllDishesByCategoryId(\PDO $connexion, int $categoryId)
+{
+    $sql = "
+    SELECT 
+        dishes.name AS dish_name,
+        COALESCE(AVG(ratings.value), 0) AS average_rating,
+        dishes.description AS description,
+        dishes.id AS dish_id,
+        users.name AS user_name,
+        COUNT(comments.id) AS number_of_comments  -- Ajouté cette ligne
+    FROM dishes
+    LEFT JOIN ratings ON dishes.id = ratings.dish_id
+    LEFT JOIN users ON dishes.user_id = users.id
+    LEFT JOIN comments ON dishes.id = comments.dish_id  -- Ajouté cette ligne
+    WHERE dishes.type_id = :categoryId
+    GROUP BY dishes.id
+    ORDER BY dishes.name ASC
+";
+
+    $rs = $connexion->prepare($sql);
+    $rs->bindValue(':categoryId', $categoryId, \PDO::PARAM_INT);
+    $rs->execute();
+
+    return $rs->fetchAll(\PDO::FETCH_ASSOC);
+}

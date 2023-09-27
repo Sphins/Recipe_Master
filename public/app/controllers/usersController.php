@@ -11,7 +11,7 @@ function indexAction(\PDO $connexion)
     $users = UsersModel\findAll($connexion);
 
     global $content, $title, $users_title, $zoneScripts;
-    $title = "Users-index";
+    $title = "Chefs";
     $users_title = "Users";
     $zoneScripts = '<script src="./js/index.js"></script>';
     ob_start();

@@ -3,29 +3,34 @@ RewriteEngine on
 #Route liste des recettes
 #pattern : recettes/index
 #Target: /?dishes=index
-
-RewriteRule ^recettes/index$ index.php/?dishes=index[L]
+RewriteRule ^recettes/index$ index.php/?dishes=index [L]
 
 #route details d une recette
 #Pattern: /recettes/show/{id}/{slug}
 #Target : /?dishes=show&id=x
-
 RewriteRule ^recettes/show/([1-9][0-9]*)/([a-z0-9][a-z0-9\-]*)*[a-z0-9]$ index.php/?dishes=show&id=$1 [L]
 
 #Route liste des chefs
 #pattern : chefs/index
 #Target: /?users=index
-
-RewriteRule ^chefs/index$ index.php/?users=index[L]
+RewriteRule ^chefs/index$ index.php/?users=index [L]
 
 #route details d un chefs
 #Pattern: /chefs/show/{id}/{slug}
 #Target : /?users=show&id=x
-
 RewriteRule ^chefs/show/([1-9][0-9]*)/([a-z0-9][a-z0-9\-]*)*[a-z0-9]$ index.php/?users=show&id=$1 [L]
+
+#route details d une categories
+#Pattern: /categories/{id}
+#Target : /?categories=show&id=x
+RewriteRule ^categories/([1-9][0-9]*)$ index.php/?categories=show&id=$1 [L]
+
+# Route details d'une ingredient
+# Pattern: /ingredients/{id}
+# Target : /?ingredients=show&id=x
+RewriteRule ^ingredients/([1-9][0-9]*)$ index.php/?ingredients=show&id=$1 [L]
 
 #route defaut
 #Pattern: /
 #Target : /
-
 RewriteCond %{REQUEST_URI} !\.(js|css|jpg|gif|zip|png|pdf)$ [NC]

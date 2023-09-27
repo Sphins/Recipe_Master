@@ -12,7 +12,7 @@ function indexAction(\PDO $connexion)
     $dishes = DishesModel\findAll($connexion);
 
     global $content, $title, $dishes_title, $zoneScripts;
-    $title = "Dishes-index";
+    $title = "Recettes";
     $dishes_title = "Dishes";
     $zoneScripts = '<script src="./js/index.js"></script>';
     ob_start();
