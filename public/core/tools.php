@@ -31,7 +31,7 @@ function slugify($str, $delimiter = '-')
     return $str;
 }
 
-function limit_words($string, $word_limit)
+function truncate($string, $word_limit)
 {
     $words = explode(" ", $string);
     $result = implode(" ", array_splice($words, 0, $word_limit));

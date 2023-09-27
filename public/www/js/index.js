@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreDishes = document.getElementById('loadMoreDishes');
     const loadMoreUsers = document.getElementById('loadMoreUsers');
     
-    var offSet = 6;
+    var offSet = 9;
   
     if(loadMoreDishes !== null){
       loadMoreDishes.addEventListener('click', function(e) {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1000);
           });
     
-          offSet += 6;
+          offSet += 9;
         });
     }
   });

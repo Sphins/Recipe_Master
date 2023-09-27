@@ -38,7 +38,7 @@ function getTopUser(\PDO $connexion)
     return $rs->fetch(\PDO::FETCH_ASSOC);
 }
 
-function findAll(\PDO $connexion, int $limit = 6, int $offset = 0)
+function findAll(\PDO $connexion, int $limit = 9, int $offset = 0)
 {
     $sql = "
             SELECT 
@@ -55,7 +55,7 @@ function findAll(\PDO $connexion, int $limit = 6, int $offset = 0)
             LEFT JOIN ratings ON dishes.id = ratings.dish_id
             LEFT JOIN comments ON dishes.id = comments.dish_id
             GROUP BY users.id
-            ORDER BY users.name ASC
+            ORDER BY users.created_at ASC
             LIMIT :limit
             OFFSET :offset
     ";

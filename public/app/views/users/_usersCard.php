@@ -18,7 +18,7 @@ foreach ($users as $user) : ?>
             </div>
 
             <!-- Description ou bio de l'utilisateur (si vous en avez une) -->
-            <p class="text-gray-600"><?php echo Tools\limit_words($user['user_biography'], 10); ?></p>
+            <p class="text-gray-600"><?php echo Tools\truncate($user['user_biography'], 10); ?></p>
 
             <!-- Nombre total de recettes publiées par l'utilisateur -->
             <div class="flex items-center mt-4">
@@ -26,7 +26,7 @@ foreach ($users as $user) : ?>
             </div>
 
             <!-- Lien vers le profil de l'utilisateur ou ses recettes -->
-            <a href="userProfile.html" class="inline-block mt-4 bg-blue-500 hover:bg-blue-800 rounded-full px-4 py-2 text-white">
+            <a href="chefs/show/<?php echo $user['user_id']; ?>/<?php echo Core\Tools\slugify($user['user_name']) ?>" class="inline-block mt-4 bg-blue-500 hover:bg-blue-800 rounded-full px-4 py-2 text-white">
                 Voir le profil
             </a>
         </div>

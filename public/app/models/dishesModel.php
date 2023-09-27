@@ -13,6 +13,7 @@ function randOneDishes(\PDO $connexion)
     // Requête SQL pour récupérer une recette aléatoire avec ses informations associées
     $sql = "
         SELECT 
+            dishes.id AS dish_id,
             dishes.name AS dish_name,
             COALESCE(AVG(ratings.value), 0) AS average_rating,
             dishes.description,
@@ -47,6 +48,7 @@ function findPopularDishes(\PDO $connexion, $limitation)
     // Requête SQL pour récupérer les recettes les mieux notées avec leurs informations associées
     $sql = "
         SELECT 
+            dishes.id AS dish_id,
             dishes.name AS dish_name,
             COALESCE(AVG(ratings.value), 0) AS average_rating,
             dishes.description,
@@ -83,6 +85,7 @@ function getLastDishesByUserId(\PDO $connexion, $userId)
     // Requête SQL pour récupérer les trois dernières recettes publiées par un utilisateur spécifié
     $sql = "
         SELECT 
+            dishes.id AS dish_id,
             dishes.name AS dish_name,
             COALESCE(AVG(ratings.value), 0) AS average_rating,
             dishes.description
@@ -103,10 +106,11 @@ function getLastDishesByUserId(\PDO $connexion, $userId)
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
 }
 
-function findAll(\PDO $connexion, int $limit = 6, int $offset = 0)
+function findAll(\PDO $connexion, int $limit = 9, int $offset = 0)
 {
     $sql = "
         SELECT 
+            dishes.id AS dish_id,
             dishes.name AS dish_name,
             COALESCE(AVG(ratings.value), 0) AS average_rating,
             dishes.description,
@@ -117,7 +121,7 @@ function findAll(\PDO $connexion, int $limit = 6, int $offset = 0)
         LEFT JOIN users ON dishes.user_id = users.id
         LEFT JOIN comments ON dishes.id = comments.dish_id
         GROUP BY dishes.id
-        ORDER BY dishes.name ASC
+        ORDER BY dishes.created_at ASC
         LIMIT :limit
         OFFSET :offset
     ";
@@ -128,4 +132,31 @@ function findAll(\PDO $connexion, int $limit = 6, int $offset = 0)
     $rs->execute();
 
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+function findOneByDishId(\PDO $connexion, int $id)
+{
+    $sql = "
+        SELECT
+            dishes.picture AS picture, 
+            dishes.id AS dish_id,
+            dishes.name AS dish_name,
+            COALESCE(AVG(ratings.value), 0) AS average_rating,
+            dishes.prep_time,
+            dishes.description,
+            users.name AS user_name,
+            COUNT(comments.id) AS number_of_comments
+        FROM dishes
+        LEFT JOIN ratings ON dishes.id = ratings.dish_id
+        LEFT JOIN users ON dishes.user_id = users.id
+        LEFT JOIN comments ON dishes.id = comments.dish_id
+        WHERE dishes.id = :id
+        GROUP BY dishes.id
+    ";
+
+    $rs = $connexion->prepare($sql);
+    $rs->bindValue(':id', $id, \PDO::PARAM_INT);
+    $rs->execute();
+
+    return $rs->fetch(\PDO::FETCH_ASSOC);
 }

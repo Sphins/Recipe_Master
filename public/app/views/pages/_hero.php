@@ -18,13 +18,13 @@
              <span class="text-white"><?php echo number_format($rand['average_rating'], 1); ?></span>
          </div>
          <p class="text-gray-300 mb-4">
-             <?php echo Tools\limit_words($rand['description'], 45); ?>
+             <?php echo Tools\truncate($rand['description'], 45); ?>
          </p>
          <div class="flex items-center mb-4">
              <span class="text-gray-400 mr-2">Par <?php echo $rand['user_name']; ?></span>
              <span class="text-gray-500"><i class="fas fa-comment"></i> <?php echo $rand['number_of_comments']; ?> commentaires</span>
          </div>
-         <a href="recipe.html" class="inline-block bg-red-500 hover:bg-red-800 rounded-full px-4 py-2 text-white">
+         <a href="recettes/show/<?php echo $rand['dish_id']; ?>/<?php echo Tools\slugify($rand['dish_name']) ?>" class="inline-block bg-red-500 hover:bg-red-800 rounded-full px-4 py-2 text-white">
              Voir la recette
          </a>
      </div>

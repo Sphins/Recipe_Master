@@ -21,7 +21,7 @@ use Core\Tools;
 
     <!-- User Actions -->
     <div class="flex justify-between items-center mb-4">
-        <a href="user_recipes.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-full px-6 py-2">Voir mes recettes</a>
+        <a href="chefs/show/<?php echo $topUser['user_id']; ?>/<?php echo Tools\slugify($topUser['user_name']) ?>" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-full px-6 py-2">Voir mes recettes</a>
     </div>
 
     <!-- User's Latest Recipes -->
@@ -44,9 +44,9 @@ use Core\Tools;
                             <span><?php echo number_format($userDish['average_rating'], 1); ?></span>
                         </div>
                         <p class="text-gray-500">
-                            <?php echo Tools\limit_words($userDish['description'], 25); ?>
+                            <?php echo Tools\truncate($userDish['description'], 25); ?>
                         </p>
-                        <a href="recipe_detail.html" class="text-yellow-500 hover:text-yellow-600 mt-2 inline-block">Voir la recette</a>
+                        <a href="recettes/show/<?php echo $userDish['dish_id']; ?>/<?php echo Tools\slugify($userDish['dish_name']) ?>" class="text-yellow-500 hover:text-yellow-600 mt-2 inline-block">Voir la recette</a>
                     </div>
                 </article>
             <?php endforeach ?>
