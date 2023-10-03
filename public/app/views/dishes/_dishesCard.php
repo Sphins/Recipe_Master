@@ -13,7 +13,7 @@ foreach ($dishes as $dish) : ?>
                 <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
                 <span><?php echo number_format($dish['average_rating'], 1); ?></span>
             </div>
-            <p class="text-gray-600"><?php echo Tools\truncate($dish['description'], 10); ?></p>
+            <p class="text-gray-600"><?php echo Tools\truncate($dish['description'], 75); ?></p>
             <div class="flex items-center mt-4">
                 <span class="text-gray-700 mr-2">Par <?php echo $dish['user_name']; ?></span>
                 <span class="text-gray-500"><i class="fas fa-comment"></i> <?php echo $dish['number_of_comments']; ?> commentaires</span>

@@ -31,12 +31,19 @@ function slugify($str, $delimiter = '-')
     return $str;
 }
 
-function truncate($string, $word_limit)
+function truncate($string, $char_limit)
 {
-    $words = explode(" ", $string);
-    $result = implode(" ", array_splice($words, 0, $word_limit));
-    if (count($words) > $word_limit) {
-        $result .= '...';
+    if (strlen($string) <= $char_limit) {
+        return $string;
     }
-    return $result;
+
+    $last_space = strrpos(substr($string, 0, $char_limit), ' ');
+
+    $truncated_string = substr($string, 0, ($last_space ? $last_space : $char_limit));
+
+    if (strlen($string) > strlen($truncated_string)) {
+        $truncated_string .= '...';
+    }
+
+    return $truncated_string;
 }

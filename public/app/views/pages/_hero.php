@@ -18,7 +18,7 @@
              <span class="text-white"><?php echo number_format($rand['average_rating'], 1); ?></span>
          </div>
          <p class="text-gray-300 mb-4">
-             <?php echo Tools\truncate($rand['description'], 45); ?>
+             <?php echo Tools\truncate($rand['description'], 200); ?>
          </p>
          <div class="flex items-center mb-4">
              <span class="text-gray-400 mr-2">Par <?php echo $rand['user_name']; ?></span>

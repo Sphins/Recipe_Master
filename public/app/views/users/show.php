@@ -34,7 +34,7 @@ use Core\Tools;
                             <span><?php echo number_format($dish['average_rating'], 1); ?></span>
                         </div>
                         <p class="text-gray-600">
-                            <?php echo Tools\truncate($dish['dish_description'], 25); ?>
+                            <?php echo Tools\truncate($dish['dish_description'], 75); ?>
                         </p>
                         <a href="recettes/show/<?php echo $dish['dish_id']; ?>/<?php echo Core\Tools\slugify($dish['dish_name']) ?>" class="inline-block mt-4 bg-red-500 hover:bg-red-800 rounded-full px-4 py-2 text-white">Voir la recette</a>
                     </div>

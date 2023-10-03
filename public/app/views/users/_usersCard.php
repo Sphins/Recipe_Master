@@ -17,7 +17,7 @@ foreach ($users as $user) : ?>
             </div>
 
             <!-- Description ou bio de l'utilisateur -->
-            <p class="text-gray-600"><?php echo Tools\truncate($user['user_biography'], 10); ?></p>
+            <p class="text-gray-600"><?php echo Tools\truncate($user['user_biography'], 75); ?></p>
 
             <!-- Nombre total de recettes publiées par l'utilisateur -->
             <div class="flex items-center mt-4">
