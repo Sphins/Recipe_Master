@@ -6,7 +6,6 @@ use Core\Tools;
 
 foreach ($users as $user) : ?>
     <article class="bg-white rounded-lg overflow-hidden shadow-lg relative">
-        <!-- Image de profil de l'utilisateur (j'ai supposé que vous avez une URL pour cela) -->
         <img class="w-full h-48 object-cover" src="<?php echo IMG_FOLDER . $user['user_picture']; ?>" alt="User Profile Image" />
         <div class="p-4">
             <h3 class="text-xl font-bold mb-2"><?php echo $user['user_name']; ?></h3>
@@ -17,7 +16,7 @@ foreach ($users as $user) : ?>
                 <span>Inscrit le : <?php echo $user['user_registration_date']; ?></span>
             </div>
 
-            <!-- Description ou bio de l'utilisateur (si vous en avez une) -->
+            <!-- Description ou bio de l'utilisateur -->
             <p class="text-gray-600"><?php echo Tools\truncate($user['user_biography'], 10); ?></p>
 
             <!-- Nombre total de recettes publiées par l'utilisateur -->

@@ -20,10 +20,10 @@ include_once '../app/views/tables/_addTablElementButton.php';
                     <td class="border px-4 py-2"><?php echo $value; ?></td>
                 <?php endforeach; ?>
                 <td class="border px-4 py-2">
-                    <a href="path_to_edit_item.php?id=<?php echo $row['id']; ?>" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">Modifier</a>
+                    <a href="www/table/edit/<?php echo $title; ?>/<?php echo $row['id']; ?>" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">Modifier</a>
                 </td>
                 <td class="border px-4 py-2">
-                    <a href="www/table/delete/<?php echo $title; ?>/<?php echo $row['id']; ?>" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">Supprimer</a>
+                    <a href="javascript:void(0);" onclick="confirmDelete('www/table/delete/<?php echo $title; ?>/<?php echo $row['id']; ?>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">Supprimer</a>
                 </td>
             </tr>
         <?php endforeach; ?>

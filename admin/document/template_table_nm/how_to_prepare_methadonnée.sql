@@ -1,50 +1,52 @@
-ALTER TABLE books_has_tags COMMENT = '{
+ALTER TABLE tableDeNm COMMENT = '{
     "type": "nm",
-    "junctionTable": "books_has_tags",
+    "junctionTable": "tableDeNm",
     "tables": {
         "from": {
-            "name": "books",
-            "column": "book_id",
+            "name": "tableOrigine",
+            "column": "nom de la colone origine",
+            "displayInForm": true 
+        },
+        "to": {
+            "name": "table d arriver",
+            "column": "nom de la colone arriver",
+            "displayInForm": false
+        }
+    }
+}';
+
+
+//si il y a des colonne suplementaire faire comme suit 
+
+ALTER TABLE tableDeNm COMMENT = '{
+    "type": "nm",
+    "junctionTable": "tableDeNm",
+    "tables": {
+        "from": {
+            "name": "tableOrigine",
+            "column": "nom de la colone origine",
+            "displayInForm": true 
+        },
+        "to": {
+            "name": "table d arriver",
+            "column": "nom de la colone arriver",
+            "displayInForm": false
+        }
+    },
+    "additionalColumns": [
+        {
+            "name": "quantity",
+            "type": "float",
+            "default": null,
+            "required": false,
             "displayInForm": true
         },
-        "to": {
-            "name": "tags",
-            "column": "tag_id",
-            "displayInForm": false
+        {
+            "name": "anotherColumn",
+            "type": "varchar",
+            "default": "",
+            "required": false,
+            "displayInForm": true
         }
-    }
-}';
-
-ALTER TABLE users_collections COMMENT = '{
-    "type": "nm",
-    "junctionTable": "users_collections",
-    "tables": {
-        "from": {
-            "name": "users",
-            "column": "user_id",
-            "displayInForm": false
-        },
-        "to": {
-            "name": "books",
-            "column": "book_id",
-            "displayInForm": false
-        }
-    }
-}';
-
-ALTER TABLE users_notations COMMENT = '{
-    "type": "nm",
-    "junctionTable": "users_notations",
-    "tables": {
-        "from": {
-            "name": "users",
-            "column": "user_id",
-            "displayInForm": false
-        },
-        "to": {
-            "name": "books",
-            "column": "book_id",
-            "displayInForm": false
-        }
-    }
+    ]
 }';

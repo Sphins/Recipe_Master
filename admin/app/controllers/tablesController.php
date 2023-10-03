@@ -26,14 +26,14 @@ function showTable(\PDO $connexion, $selectedTable)
     $content = ob_get_clean();
 };
 
-function createForm(\PDO $connexion, $selectedTable)
+function createForm(\PDO $connexion, $selectedTable, $existingData = null)
 {
     $model = new Model($connexion);
     $columns = $model->getTableStructure($selectedTable);
     $foreignKey = $model->getForeignKeys($selectedTable);
     $columsForeingnKey = $model->getDataFromForeingnKeys($foreignKey);
 
-    // 1. Récupérer les métadonnées pour toutes les tables
+    // Récupérer les métadonnées pour toutes les tables
     $allTables = $model->getAllTables();
     $nmRelations = [];
 
@@ -48,16 +48,17 @@ function createForm(\PDO $connexion, $selectedTable)
         }
     }
 
-    // 2. Récupérer les données nécessaires pour ces relations N:M
+    // Récupérer les données nécessaires pour ces relations N:M
     $nmData = [];
     foreach ($nmRelations as $relation) {
         $relatedTable = ($relation['tables']['from']['name'] === $selectedTable) ? $relation['tables']['to']['name'] : $relation['tables']['from']['name'];
         $nmData[$relatedTable] = $model->getNMData($relation);
     }
 
+
     include '../app/views/form/createForm.php';
 
-    global $content, $title, $selectedTable, $columns, $columsForeingnKey, $nmData;
+    global $content, $title, $selectedTable, $columns, $columsForeingnKey, $nmData, $existingData;
     $title = $selectedTable;
     ob_start();
     include '../app/views/template/partials/_main.php';
@@ -67,6 +68,15 @@ function createForm(\PDO $connexion, $selectedTable)
 function addAction(\PDO $connexion, $selectedTable)
 {
     $model = new Model($connexion);
+
+    // Vérifier et hacher le mot de passe si présent
+    if (isset($_POST['password'])) {
+        $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    }
+    if (isset($_POST['Password'])) {
+        $_POST['Password'] = password_hash($_POST['Password'], PASSWORD_DEFAULT);
+    }
+
     $insertedId = $model->insertData($selectedTable, $_POST);
 
     // Gérer les relations N:M
@@ -75,13 +85,22 @@ function addAction(\PDO $connexion, $selectedTable)
         $relatedTable = ($relation['tables']['from']['name'] === $selectedTable) ? $relation['tables']['to']['name'] : $relation['tables']['from']['name'];
         if (isset($_POST[$relatedTable])) {
             foreach ($_POST[$relatedTable] as $relatedId) {
-                $model->insertNMRelation($relation['junctionTable'], $insertedId, $relatedId);
+                $additionalData = [];
+                if (isset($relation['additionalColumns']) && isset($_POST['additional'])) {
+                    foreach ($relation['additionalColumns'] as $additionalColumn) {
+                        // Utiliser les données $_POST['additional'] ici
+                        $additionalData[$additionalColumn['name']] = $_POST['additional'][$relatedId] ?? $additionalColumn['default'];
+                    }
+                }
+                $model->insertNMRelation($relation['junctionTable'], $insertedId, $relatedId, $additionalData);
             }
         }
     }
 
     header('location: ' . ADMIN_ROOT . "/table/show/" . $selectedTable);
 }
+
+
 
 function deleteAction(\PDO $connexion, $selectedTable, $elementId)
 {
@@ -99,4 +118,58 @@ function deleteAction(\PDO $connexion, $selectedTable, $elementId)
 
     // 3. Redirigez l'utilisateur vers la page d'affichage des données
     header('location: ' . ADMIN_ROOT . "/table/show/" . $selectedTable);
+}
+
+function editAction(\PDO $connexion, $selectedTable, $elementId)
+{
+    $model = new Model($connexion);
+
+    // Étape 1: Récupérer les données existantes
+    $existingData = $model->getDataById($selectedTable, $elementId);
+
+    // Étape 2: Vérifier les relations N:M et récupérer les données liées
+    $nmRelations = $model->getNMRelations($selectedTable);
+    foreach ($nmRelations as $relation) {
+        $relatedData = $model->getNMDataById($relation, $elementId);
+        $existingData[$relation['tables']['to']['name']] = $relatedData;
+    }
+
+    // Étape 3: Générer et pré-remplir le formulaire
+    createForm($connexion, $selectedTable, $existingData);
+}
+
+
+function updateAction(\PDO $connexion, $selectedTable, $elementId)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $model = new Model($connexion);
+        $model->updateData($selectedTable, $elementId, $_POST);
+
+        $insertedId = $elementId;
+
+
+        $nmRelations = $model->getNMRelations($selectedTable);
+        foreach ($nmRelations as $relation) {
+            $relatedTable = ($relation['tables']['from']['name'] === $selectedTable) ? $relation['tables']['to']['name'] : $relation['tables']['from']['name'];
+            $fromColumn = $relation['tables']['from']['column'];
+            $model->deleteNMRecords($relation['junctionTable'], $fromColumn, $elementId);
+
+            if (isset($_POST[$relatedTable])) {
+                foreach ($_POST[$relatedTable] as $relatedId) {
+                    $additionalData = [];
+                    if (isset($relation['additionalColumns']) && isset($_POST['additional'])) {
+                        foreach ($relation['additionalColumns'] as $additionalColumn) {
+                            // Utiliser les données $_POST['additional'] ici
+                            $additionalData[$additionalColumn['name']] = $_POST['additional'][$relatedId] ?? $additionalColumn['default'];
+                        }
+                    }
+                    $model->insertNMRelation($relation['junctionTable'], $insertedId, $relatedId, $additionalData);
+                }
+            }
+        }
+
+        header('location: ' . ADMIN_ROOT . "/table/show/" . $selectedTable);
+    } else {
+        header('location: ' . ADMIN_ROOT . "/table/edit/" . $selectedTable . '/' . $elementId);
+    }
 }

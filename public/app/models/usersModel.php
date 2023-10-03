@@ -45,7 +45,7 @@ function findAll(\PDO $connexion, int $limit = 9, int $offset = 0)
             users.id AS user_id,
             users.name AS user_name,
             users.picture AS user_picture,
-            users.biography AS user_biography,  -- Ajout de la biographie ici
+            users.biography AS user_biography,
             DATE(users.created_at) AS user_registration_date,
             COUNT(DISTINCT dishes.id) AS total_recipes,
             COALESCE(AVG(ratings.value), 0) AS average_rating,
@@ -84,4 +84,25 @@ function findOneByUserId(\PDO $connexion, int $id)
     $rs->execute();
 
     return $rs->fetch(\PDO::FETCH_ASSOC);
+}
+
+function findOneByPseudo(\PDO $connexion, array $data = null)
+{
+    $sql = "SELECT * 
+    FROM users 
+    where name = :pseudo;
+    ";
+    $rs = $connexion->prepare($sql);
+    $rs->bindValue(':pseudo', $data['pseudo'], \PDO::PARAM_STR);
+    $rs->execute();
+    return $rs->fetch(\PDO::FETCH_ASSOC);
+}
+
+function updateUserPassword(\PDO $connexion, $userId, $newHashedPassword)
+{
+    $query = "UPDATE users SET password = :password WHERE id = :id";
+    $stmt = $connexion->prepare($query);
+    $stmt->bindParam(':password', $newHashedPassword);
+    $stmt->bindParam(':id', $userId);
+    $stmt->execute();
 }

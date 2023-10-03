@@ -145,16 +145,39 @@ class Model
         return $nmRelations;
     }
 
-    public function insertNMRelation($nmTable, $mainId, $relatedId)
+    public function insertNMRelation($nmTable, $mainId, $relatedId, $additionalData = [])
     {
         $metadata = $this->getMetadata($nmTable);
         $fromColumn = $metadata['tables']['from']['column'];
         $toColumn = $metadata['tables']['to']['column'];
 
-        $query = "INSERT INTO $nmTable ($fromColumn, $toColumn) VALUES (?, ?)";
+        $columns = [$fromColumn, $toColumn];
+        $placeholders = ['?', '?'];
+        $values = [$mainId, $relatedId];
+
+        if (!empty($additionalData) && isset($metadata['additionalColumns'])) {
+            foreach ($metadata['additionalColumns'] as $additionalColumn) {
+                $columnName = $additionalColumn['name'];
+                $columns[] = $columnName;
+                $placeholders[] = '?';
+                // Si la valeur est null, assignez une valeur par défaut appropriée
+                // Vous pouvez définir la valeur par défaut dans $additionalColumn['default'] ou choisir une valeur par défaut appropriée
+                $value = isset($additionalData[$columnName]) ? $additionalData[$columnName] : (isset($additionalColumn['default']) ? $additionalColumn['default'] : null);
+                if ($value === null) {
+                    // Gérez la situation où la valeur est null et ne peut pas être null dans la base de données
+                    $value = 0; // Ou une autre valeur par défaut appropriée
+                }
+                $values[] = $value;
+            }
+        }
+
+        $query = "INSERT INTO $nmTable (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")";
         $stmt = $this->connexion->prepare($query);
-        $stmt->execute([$mainId, $relatedId]);
+        $stmt->execute($values);
     }
+
+
+
 
     public function deleteData($tableName, $id)
     {
@@ -210,5 +233,67 @@ class Model
         $metadata = json_decode($comment, true);
 
         return isset($metadata['type']) && $metadata['type'] == 'nm';
+    }
+
+    public function getDataById($tableName, $id)
+    {
+        $query = "SELECT * FROM $tableName WHERE id = :id";
+        $stmt = $this->connexion->prepare($query);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function updateData($tableName, $elementId, $postData)
+    {
+        // Étape 1: Filtrer les données postées
+        $columns = $this->getTableColumns($tableName);
+        $data = array_filter($postData, function ($key) use ($columns) {
+            return in_array($key, $columns) && $key !== 'id' && $key !== 'created_at';
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Étape 2: Construire la chaîne de mise à jour SQL
+        $updateString = implode(", ", array_map(function ($key) {
+            return "$key = :$key";
+        }, array_keys($data)));
+
+        // Étape 3: Générer et exécuter la requête
+        $query = "UPDATE $tableName SET $updateString WHERE id = :id";
+        $stmt = $this->connexion->prepare($query);
+        $data['id'] = $elementId;
+        $stmt->execute($data);
+
+        // Étape 4: Retourner le résultat
+        return $stmt->rowCount(); // Retourne le nombre de lignes affectées
+    }
+
+    public function getNMDataById($metadata, $id)
+    {
+        $junctionTable = $metadata['junctionTable'];
+        $fromColumn = $metadata['tables']['from']['column'];
+        $toColumn = $metadata['tables']['to']['column'];
+        $selectColumns = "$toColumn AS toId";
+
+        if (isset($metadata['additionalColumns']) && is_array($metadata['additionalColumns'])) {
+            $i = 1;
+            foreach ($metadata['additionalColumns'] as $additionalColumn) {
+                if (isset($additionalColumn['name']) && is_string($additionalColumn['name'])) {
+                    // Assurez-vous que $additionalColumn['name'] est sécurisé
+                    $additionalColumnName = $additionalColumn['name'] . " AS addCol" . $i;
+                    $selectColumns .= ", $additionalColumnName";
+                    $i++;
+                }
+            }
+        }
+
+        $query = $this->connexion->prepare("
+            SELECT $selectColumns
+            FROM $junctionTable
+            WHERE $fromColumn = :id;
+        ");
+        $query->bindParam(':id', $id, \PDO::PARAM_INT);
+        $query->execute();
+        $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+        return $rows;
     }
 }

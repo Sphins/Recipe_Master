@@ -20,6 +20,18 @@ RewriteRule ^chefs/index$ index.php/?users=index [L]
 #Target : /?users=show&id=x
 RewriteRule ^chefs/show/([1-9][0-9]*)/([a-z0-9][a-z0-9\-]*)*[a-z0-9]$ index.php/?users=show&id=$1 [L]
 
+#route usersLogin
+#Pattern: users/login
+#Target : /?users=login
+
+RewriteRule ^users/login$ index.php/?users=login [L]
+
+#route userssubmit
+#Pattern: users/submit
+#Target : /?users=submit
+
+RewriteRule ^users/submit$ index.php/?users=submit [L]
+
 #route details d une categories
 #Pattern: /categories/{id}
 #Target : /?categories=show&id=x

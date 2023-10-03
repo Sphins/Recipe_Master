@@ -48,6 +48,22 @@ switch ($action) {
             $handled = true;
         }
         break;
+
+    case 'edit':
+
+        if (in_array($tableName, $tables)) {
+            TablesController\editAction($connexion, $tableName, $elementId);
+            $handled = true;
+        }
+        break;
+
+    case 'update':
+
+        if (in_array($tableName, $tables)) {
+            TablesController\updateAction($connexion, $tableName, $elementId);
+            $handled = true;
+        }
+        break;
 }
 
 // Si aucune table n'a été traitée

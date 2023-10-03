@@ -19,6 +19,9 @@
                                 Email: contact@recipemaster.com
                             </a>
                         </li>
+                        <li>
+                            <a class="inline-block hover:text-white hover:underline py-1" href="users/login">Administration</a>
+                        </li>
                     </ul>
                 </div>
             </div>

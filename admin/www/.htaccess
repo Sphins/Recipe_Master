@@ -26,6 +26,18 @@ RewriteRule ^table/add/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])$ index.php/?table=add&n
 
 RewriteRule ^table/delete/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])/([1-9][0-9]*)$ index.php/?table=delete&name=$1&id=$3 [L]
 
+#update from table
+#Pattern: table/edit/{namOfTable}/{id}
+#Target : index.php/?table=edit&name={namOfTable}$id={id}
+
+RewriteRule ^table/edit/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])/([1-9][0-9]*)$ index.php/?table=edit&name=$1&id=$3 [L]
+
+#update from table
+#Pattern: table/update/{nameOfTable}/{id}
+#Target : index.php/?table=update&name={nameOfTable}&id={id}
+
+RewriteRule ^table/update/(([a-z0-9][a-z0-9\-_]*)*[a-z0-9])/([1-9][0-9]*)$ index.php/?table=update&name=$1&id=$3 [L]
+
 #Route de users =============================================
 
 #LOGOUT
