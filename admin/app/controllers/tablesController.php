@@ -69,7 +69,7 @@ function addAction(\PDO $connexion, $selectedTable)
 {
     $model = new Model($connexion);
 
-    // Vérifier et hacher le mot de passe si présent
+    // Password Hashing
     if (isset($_POST['password'])) {
         $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
     }
@@ -77,9 +77,22 @@ function addAction(\PDO $connexion, $selectedTable)
         $_POST['Password'] = password_hash($_POST['Password'], PASSWORD_DEFAULT);
     }
 
+    // Image Upload Handling
+    if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
+        $imagePath = handleImageUpload();
+        if (!$imagePath) {
+            $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+        } else {
+            $_POST['picture'] = $imagePath;
+        }
+    } else {
+        $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+    }
+
+    // Data Insertion
     $insertedId = $model->insertData($selectedTable, $_POST);
 
-    // Gérer les relations N:M
+    // N:M Relations Handling
     $nmRelations = $model->getNMRelations($selectedTable);
     foreach ($nmRelations as $relation) {
         $relatedTable = ($relation['tables']['from']['name'] === $selectedTable) ? $relation['tables']['to']['name'] : $relation['tables']['from']['name'];
@@ -88,7 +101,6 @@ function addAction(\PDO $connexion, $selectedTable)
                 $additionalData = [];
                 if (isset($relation['additionalColumns']) && isset($_POST['additional'])) {
                     foreach ($relation['additionalColumns'] as $additionalColumn) {
-                        // Utiliser les données $_POST['additional'] ici
                         $additionalData[$additionalColumn['name']] = $_POST['additional'][$relatedId] ?? $additionalColumn['default'];
                     }
                 }
@@ -143,11 +155,31 @@ function updateAction(\PDO $connexion, $selectedTable, $elementId)
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $model = new Model($connexion);
+
+        // Password Hashing
+        if (isset($_POST['password'])) {
+            $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        }
+        if (isset($_POST['Password'])) {
+            $_POST['Password'] = password_hash($_POST['Password'], PASSWORD_DEFAULT);
+        }
+
+        // Image Upload Handling
+        if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
+            $imagePath = handleImageUpload();
+            if (!$imagePath) {
+                $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+            } else {
+                $_POST['picture'] = $imagePath;
+            }
+        } else {
+            $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+        }
+
+        // Data Updating
         $model->updateData($selectedTable, $elementId, $_POST);
 
         $insertedId = $elementId;
-
-
         $nmRelations = $model->getNMRelations($selectedTable);
         foreach ($nmRelations as $relation) {
             $relatedTable = ($relation['tables']['from']['name'] === $selectedTable) ? $relation['tables']['to']['name'] : $relation['tables']['from']['name'];
@@ -159,7 +191,6 @@ function updateAction(\PDO $connexion, $selectedTable, $elementId)
                     $additionalData = [];
                     if (isset($relation['additionalColumns']) && isset($_POST['additional'])) {
                         foreach ($relation['additionalColumns'] as $additionalColumn) {
-                            // Utiliser les données $_POST['additional'] ici
                             $additionalData[$additionalColumn['name']] = $_POST['additional'][$relatedId] ?? $additionalColumn['default'];
                         }
                     }
@@ -171,5 +202,27 @@ function updateAction(\PDO $connexion, $selectedTable, $elementId)
         header('location: ' . ADMIN_ROOT . "/table/show/" . $selectedTable);
     } else {
         header('location: ' . ADMIN_ROOT . "/table/edit/" . $selectedTable . '/' . $elementId);
+    }
+}
+
+function handleImageUpload()
+{
+    // Nom par défaut de l'image
+    $defaultImage = "https://spoonacular.com/recipeImages/632151-556x370.jpg";
+
+    // Vérifiez si le fichier image a été téléchargé
+    if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
+
+        // Chemin de destination
+        $target_file = IMG_FOLDER . basename($_FILES["picture"]["name"]);
+
+        // Essayez de déplacer le fichier téléchargé vers le répertoire de destination
+        if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
+            return basename($_FILES["picture"]["name"]);  // retourne le chemin du fichier si succès
+        } else {
+            return $defaultImage;
+        }
+    } else {
+        return $defaultImage;
     }
 }
