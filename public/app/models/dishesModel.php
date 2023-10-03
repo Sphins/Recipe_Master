@@ -235,3 +235,43 @@ function findAllDishesByIngredientId(\PDO $connexion, int $ingredientId)
 
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
 }
+
+function findAllBySearch(\PDO $connexion, string $search)
+{
+    $words = explode(' ', trim($search));
+
+    $sql = "
+            SELECT DISTINCT 
+            dishes.name AS dish_name,
+            COALESCE(AVG(ratings.value), 0) AS average_rating,
+            dishes.description AS description,
+            dishes.id AS dish_id,
+            users.name AS user_name,
+            COUNT(comments.id) AS number_of_comments  
+            FROM dishes
+            LEFT JOIN ratings ON dishes.id = ratings.dish_id
+            LEFT JOIN users ON dishes.user_id = users.id
+            LEFT JOIN comments ON dishes.id = comments.dish_id
+            LEFT JOIN dishes_has_ingredients ON dishes.id = dishes_has_ingredients.dish_id
+            LEFT JOIN ingredients ON dishes_has_ingredients.ingredient_id = ingredients.id
+            WHERE 1=0";
+
+    for ($i = 0; $i < count($words); $i++) :
+        $sql .= "
+            OR dishes.name          LIKE :word$i 
+            OR dishes.description   LIKE :word$i 
+            OR ingredients.name     LIKE :word$i";
+    endfor;
+
+    $sql .= "
+            GROUP BY dishes.id 
+            ORDER BY dishes.name ASC;";
+
+    $rs = $connexion->prepare($sql);
+    for ($i = 0; $i < count($words); $i++) :
+        $rs->bindValue(":word$i", '%' . $words[$i] . '%', \PDO::PARAM_STR);
+    endfor;
+    $rs->execute();
+
+    return $rs->fetchAll(\PDO::FETCH_ASSOC);
+}

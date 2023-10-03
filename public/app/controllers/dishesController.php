@@ -47,3 +47,15 @@ function showAction(\PDO $connexion, int $id)
     include '../app/views/dishes/show.php';
     $content = ob_get_clean();
 }
+
+function searchAction(\PDO $connexion, string $search)
+{
+    include_once '../app/models/dishesModel.php';
+    $dishes = DishesModel\findAllBySearch($connexion, $search);
+
+    global $content, $title;
+    $title = "Resultat de votre recherche: " . $search;
+    ob_start();
+    include '../app/views/dishes/_showDishes.php';
+    $content = ob_get_clean();
+}

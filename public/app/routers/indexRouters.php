@@ -32,7 +32,6 @@ elseif (isset($_GET['categories'])) :
 elseif (isset($_GET['ingredients'])) :
     include_once '../app/routers/ingredientsRouters.php';
 
-
 //Route AJAX
 
 elseif (isset($_GET['ajax'])) :

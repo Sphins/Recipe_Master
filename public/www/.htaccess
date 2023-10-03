@@ -10,6 +10,11 @@ RewriteRule ^recettes/index$ index.php/?dishes=index [L]
 #Target : /?dishes=show&id=x
 RewriteRule ^recettes/show/([1-9][0-9]*)/([a-z0-9][a-z0-9\-]*)*[a-z0-9]$ index.php/?dishes=show&id=$1 [L]
 
+# Route d'une recherche
+# Pattern: /recettes/search
+# Target : /?ingredients=show&id=x
+RewriteRule ^recettes/search$ index.php/?dishes=search [L]
+
 #Route liste des chefs
 #pattern : chefs/index
 #Target: /?users=index
