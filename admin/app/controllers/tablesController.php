@@ -81,12 +81,12 @@ function addAction(\PDO $connexion, $selectedTable)
     if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
         $imagePath = handleImageUpload();
         if (!$imagePath) {
-            $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+            $_POST['picture'] = IMG_DEFAULT;
         } else {
             $_POST['picture'] = $imagePath;
         }
     } else {
-        $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+        $_POST['picture'] = IMG_DEFAULT;
     }
 
     // Data Insertion
@@ -168,12 +168,12 @@ function updateAction(\PDO $connexion, $selectedTable, $elementId)
         if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
             $imagePath = handleImageUpload();
             if (!$imagePath) {
-                $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+                $_POST['picture'] = IMG_DEFAULT;
             } else {
                 $_POST['picture'] = $imagePath;
             }
         } else {
-            $_POST['picture'] = 'https://spoonacular.com/recipeImages/632151-556x370.jpg';
+            $_POST['picture'] = IMG_DEFAULT;
         }
 
         // Data Updating
@@ -208,7 +208,7 @@ function updateAction(\PDO $connexion, $selectedTable, $elementId)
 function handleImageUpload()
 {
     // Nom par défaut de l'image
-    $defaultImage = "https://spoonacular.com/recipeImages/632151-556x370.jpg";
+    $defaultImage = IMG_DEFAULT;
 
     // Vérifiez si le fichier image a été téléchargé
     if (isset($_FILES['picture']) && $_FILES['picture']['error'] == 0) {
@@ -218,7 +218,7 @@ function handleImageUpload()
 
         // Essayez de déplacer le fichier téléchargé vers le répertoire de destination
         if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
-            return basename($_FILES["picture"]["name"]);  // retourne le chemin du fichier si succès
+            return basename($_FILES["picture"]["name"]);
         } else {
             return $defaultImage;
         }

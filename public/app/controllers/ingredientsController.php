@@ -9,14 +9,14 @@ function showAction(\PDO $connexion, int $id)
 {
     include_once '../app/models/ingredientsModel.php';
 
-    $category = IngredientsModel\findOneById($connexion, $id);
+    $ingredient = IngredientsModel\findOneById($connexion, $id);
 
     include_once '../app/models/dishesModel.php';
-    $dishes = DishesModel\findAllDishesByCategoryId($connexion, $id);
+    $dishes = DishesModel\findAllDishesByIngredientId($connexion, $id);
 
     global $content, $title, $dishes_title;
-    $dishes_title = $category['name'];
-    $title = $category['name'];
+    $dishes_title = $ingredient['name'];
+    $title = $ingredient['name'];
     ob_start();
     include '../app/views/dishes/_showDishes.php';
     $content = ob_get_clean();
