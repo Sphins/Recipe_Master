@@ -13,8 +13,6 @@ namespace App\Models\UsersModel;
  */
 function getTopUser(\PDO $connexion)
 {
-    // Requête SQL pour récupérer l'utilisateur ayant les recettes les mieux notées
-    // ainsi que le nombre total de recettes qu'il a postées.
     $sql = "
         SELECT 
             users.id AS user_id,
@@ -29,15 +27,19 @@ function getTopUser(\PDO $connexion)
             ORDER BY COALESCE(AVG(ratings.value), 0) DESC
             LIMIT 1
     ";
-
-    // Préparation et exécution de la requête
     $rs = $connexion->prepare($sql);
     $rs->execute();
-
-    // Retourne le résultat sous forme de tableau associatif
     return $rs->fetch(\PDO::FETCH_ASSOC);
 }
 
+/**
+ * Récupère tous les utilisateurs avec un nombre limité de résultats et un décalage.
+ *
+ * @param \PDO $connexion La connexion à la base de données.
+ * @param int $limit Nombre d'entrées à retourner.
+ * @param int $offset Décalage à partir duquel retourner les entrées.
+ * @return array Les informations des utilisateurs.
+ */
 function findAll(\PDO $connexion, int $limit = 9, int $offset = 0)
 {
     $sql = "
@@ -59,15 +61,20 @@ function findAll(\PDO $connexion, int $limit = 9, int $offset = 0)
             LIMIT :limit
             OFFSET :offset
     ";
-
     $rs = $connexion->prepare($sql);
     $rs->bindValue(':limit', $limit, \PDO::PARAM_INT);
     $rs->bindValue(':offset', $offset, \PDO::PARAM_INT);
     $rs->execute();
-
     return $rs->fetchAll(\PDO::FETCH_ASSOC);
 }
 
+/**
+ * Récupère un utilisateur spécifique par ID.
+ *
+ * @param \PDO $connexion La connexion à la base de données.
+ * @param int $id L'ID de l'utilisateur.
+ * @return array Les informations de l'utilisateur.
+ */
 function findOneByUserId(\PDO $connexion, int $id)
 {
     $sql = "
@@ -78,14 +85,19 @@ function findOneByUserId(\PDO $connexion, int $id)
         FROM users
         WHERE users.id = :id
     ";
-
     $rs = $connexion->prepare($sql);
     $rs->bindValue(':id', $id, \PDO::PARAM_INT);
     $rs->execute();
-
     return $rs->fetch(\PDO::FETCH_ASSOC);
 }
 
+/**
+ * Récupère un utilisateur par pseudo.
+ *
+ * @param \PDO $connexion La connexion à la base de données.
+ * @param array $data Les données de l'utilisateur.
+ * @return array Les informations de l'utilisateur.
+ */
 function findOneByPseudo(\PDO $connexion, array $data = null)
 {
     $sql = "SELECT * 
@@ -98,6 +110,14 @@ function findOneByPseudo(\PDO $connexion, array $data = null)
     return $rs->fetch(\PDO::FETCH_ASSOC);
 }
 
+/**
+ * Met à jour le mot de passe d'un utilisateur.
+ *
+ * @param \PDO $connexion La connexion à la base de données.
+ * @param int $userId L'ID de l'utilisateur.
+ * @param string $newHashedPassword Le nouveau mot de passe haché.
+ * @return void
+ */
 function updateUserPassword(\PDO $connexion, $userId, $newHashedPassword)
 {
     $query = "UPDATE users SET password = :password WHERE id = :id";

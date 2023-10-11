@@ -9,7 +9,7 @@ $content = '';
 define('PUBLIC_FOLDER', 'public');
 define('ADMIN_FOLDER', 'admin');
 define('DISPATCHER_NAME', 'index.php');
-define('IMG_FOLDER', 'C:\Users\Sphins\Dropbox\htdocs\scripts_serveurs\Recipe_master\public\www\img\\');
+define('IMG_FOLDER', 'C:\Users\glehe\Dropbox\htdocs\scripts_serveurs\Recipe_master\public\www\img\\');
 define('IMG_DEFAULT', 'https://spoonacular.com/recipeImages/632151-556x370.jpg');
 
 
